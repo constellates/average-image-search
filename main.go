@@ -22,8 +22,11 @@ import (
     "strconv"
 )
 
-// google search key
-var googleSearchKey =  "you-search-key"
+// configuration
+type Configuration struct {
+    SearchApiKey     string `json:"searchApiKey"`
+    SearchEngineId     string `json:"searchEngineId"`
+}
 
 // structs
 type Image struct {
@@ -97,11 +100,21 @@ func downloadFile(term string, uri string) () {
 }
 
 func requestImages(term string, count int) []string {
+
+	// configuration
+	file, _ := os.Open("config.json")
+	decoder := json.NewDecoder(file)
+	configuration := Configuration{}
+	err := decoder.Decode(&configuration)
+	if err != nil {
+	  fmt.Println("error reading configuration:", err)
+	}
+
 	var i = 1
 	var images []string
 
 	for len(images) < count {
-		resp, err := http.Get("https://www.googleapis.com/customsearch/v1?key=" + googleSearchKey + "&cx=you-serach-id:q__vcz9b7r0&q=" + url.QueryEscape(term) + "&imgSize=large&num=10&searchType=image&start=" + strconv.Itoa(i))
+		resp, err := http.Get("https://www.googleapis.com/customsearch/v1?key=" + configuration.SearchApiKey + "&cx=" + configuration.SearchEngineId + "&q=" + url.QueryEscape(term) + "&imgSize=large&num=10&searchType=image&start=" + strconv.Itoa(i))
 		if err != nil {
 			panic(err.Error())
 		}
@@ -163,7 +176,8 @@ func normalize(filePath string) () {
     // decode jpeg into image.Image
     img, err := jpeg.Decode(file)
     if err != nil {
-        log.Fatal(err)
+        // disregard images we can't decode
+        return
     }
     file.Close()
 
