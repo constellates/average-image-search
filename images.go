@@ -19,7 +19,8 @@ func normalize(filePath string) () {
 	 // open "test.jpg"
     file, err := os.Open(filePath)
     if err != nil {
-        log.Fatal(err)
+        // log.Fatal(err)
+        return
     }
 
     // decode jpeg into image.Image
@@ -41,13 +42,24 @@ func normalize(filePath string) () {
 	}
     m := resize.Resize(uint(resizeX), uint(resizeY), img, resize.Lanczos3)
 
-    // create white square
+    // create black square
     n := image.NewRGBA(image.Rect(0, 0, 800, 800))
-	white := color.RGBA{255, 255, 255, 255}
-	draw.Draw(n, n.Bounds(), &image.Uniform{white}, image.ZP, draw.Src)
+	black := color.RGBA{0, 0, 0, 255}
+	draw.Draw(n, n.Bounds(), &image.Uniform{black}, image.ZP, draw.Src)
+
+	// calculate top left image point for centering
+	var imageStartX = 0
+    var imageStartY = 0
+    if m.Bounds().Max.X > m.Bounds().Max.Y {
+	    imageStartX = 0
+	    imageStartY = -(800 - m.Bounds().Max.Y) / 2
+	} else {
+		imageStartX = -(800 - m.Bounds().Max.X) / 2
+	    imageStartY = 0
+	}
 
 	// superimpose image on background
-    draw.Draw(n, n.Bounds(), m, image.Point{0,0}, draw.Src)
+    draw.Draw(n, n.Bounds(), m, image.Point{imageStartX,imageStartY}, draw.Src)
 
     out, err := os.Create(filePath)
     if err != nil {
@@ -150,6 +162,7 @@ func writeAverageImage(values *Values, resultImage string) {
 
 func handleError(err error) {
 	if err != nil {
-		log.Fatal(err)
+		return
+		// log.Fatal(err)
 	}
 }
