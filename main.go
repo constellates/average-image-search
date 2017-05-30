@@ -46,7 +46,7 @@ func getImages(body []byte) (*GoogleImagesResponse, error) {
 	var s = new(GoogleImagesResponse)
 	err := json.Unmarshal(body, &s)
 	if err != nil {
-		fmt.Println("whoops:", err)
+		fmt.Println("whoops1:", err)
 	}
 	return s, err
 }
@@ -63,14 +63,14 @@ func downloadFile(term string, uri string) {
 		// create empty file
 		out, err := os.Create("temp/" + term + "/" + fileName)
 		if err != nil {
-			fmt.Println("whoops:", err)
+			fmt.Println("whoops2:", err)
 		}
 		defer out.Close()
 
 		// get file
 		resp, err := http.Get(uri)
 		if err != nil {
-			fmt.Println("whoops:", err)
+			fmt.Println("whoops3:", err)
 		}
 		defer resp.Body.Close()
 
@@ -78,7 +78,7 @@ func downloadFile(term string, uri string) {
 		n, err := io.Copy(out, resp.Body)
 		fmt.Println(n)
 		if err != nil {
-			fmt.Println("whoops:", err)
+			fmt.Println("whoops4:", err)
 		}
 
 		// resize image
