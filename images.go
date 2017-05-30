@@ -1,81 +1,81 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
-    "io/ioutil"
 	"os"
 	// "fmt"
 
 	"image"
 	"image/color"
+	"image/draw"
 	"image/jpeg"
 	"path"
-	"image/draw"
 
 	"github.com/nfnt/resize"
 )
 
-func normalize(filePath string) () {
-	 // open "test.jpg"
-    file, err := os.Open(filePath)
-    if err != nil {
-        // log.Fatal(err)
-        return
-    }
-
-    // decode jpeg into image.Image
-    img, err := jpeg.Decode(file)
-    if err != nil {
-        // disregard images we can't decode
-        return
-    }
-    file.Close()
-
-    // resize to width 800 using Lanczos resampling
-    // and preserve aspect ratio
-    var resizeX = 800
-    var resizeY = 800
-    if img.Bounds().Max.X > img.Bounds().Max.Y {
-	    resizeY = 0
-	} else {
-	    resizeX = 0
+func normalize(filePath string) {
+	// open "test.jpg"
+	file, err := os.Open(filePath)
+	if err != nil {
+		// log.Fatal(err)
+		return
 	}
-    m := resize.Resize(uint(resizeX), uint(resizeY), img, resize.Lanczos3)
 
-    // create black square
-    n := image.NewRGBA(image.Rect(0, 0, 800, 800))
+	// decode jpeg into image.Image
+	img, err := jpeg.Decode(file)
+	if err != nil {
+		// disregard images we can't decode
+		return
+	}
+	file.Close()
+
+	// resize to width 800 using Lanczos resampling
+	// and preserve aspect ratio
+	var resizeX = 800
+	var resizeY = 800
+	if img.Bounds().Max.X > img.Bounds().Max.Y {
+		resizeY = 0
+	} else {
+		resizeX = 0
+	}
+	m := resize.Resize(uint(resizeX), uint(resizeY), img, resize.Lanczos3)
+
+	// create black square
+	n := image.NewRGBA(image.Rect(0, 0, 800, 800))
 	black := color.RGBA{0, 0, 0, 255}
 	draw.Draw(n, n.Bounds(), &image.Uniform{black}, image.ZP, draw.Src)
 
 	// calculate top left image point for centering
 	var imageStartX = 0
-    var imageStartY = 0
-    if m.Bounds().Max.X > m.Bounds().Max.Y {
-	    imageStartX = 0
-	    imageStartY = -(800 - m.Bounds().Max.Y) / 2
+	var imageStartY = 0
+	if m.Bounds().Max.X > m.Bounds().Max.Y {
+		imageStartX = 0
+		imageStartY = -(800 - m.Bounds().Max.Y) / 2
 	} else {
 		imageStartX = -(800 - m.Bounds().Max.X) / 2
-	    imageStartY = 0
+		imageStartY = 0
 	}
 
 	// superimpose image on background
-    draw.Draw(n, n.Bounds(), m, image.Point{imageStartX,imageStartY}, draw.Src)
+	draw.Draw(n, n.Bounds(), m, image.Point{imageStartX, imageStartY}, draw.Src)
 
-    out, err := os.Create(filePath)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer out.Close()
+	out, err := os.Create(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer out.Close()
 
-    // write new image to file
-    jpeg.Encode(out, n, nil)
+	// write new image to file
+	jpeg.Encode(out, n, nil)
 
 }
 
 //averageImage
 type Values struct {
-	forSize     image.Point
-	count       uint32
+	forSize image.Point
+	count   uint32
 	// uint32 enough space for 16777216 images
 	red_total   []uint32
 	green_total []uint32
@@ -110,6 +110,10 @@ func readImg(values *Values, imageFile string) bool {
 	handleError(err)
 	defer file.Close()
 	image, _, err := image.Decode(file)
+
+	if err != nil {
+		return false
+	}
 
 	size := image.Bounds().Size()
 	if !size.Eq(values.forSize) {
