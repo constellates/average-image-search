@@ -106,6 +106,7 @@ func requestImages(term string, count int) []string {
 
 		// unmarshall json
 		s, err := getImages([]byte(body))
+		fmt.Println(s)
 
 		var items = s.Items
 		for _, item := range items {
