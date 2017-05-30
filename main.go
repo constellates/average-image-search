@@ -42,8 +42,15 @@ type GoogleImagesResponse struct {
 	Items []Item `json:"items"`
 }
 
+
 func getImages(body []byte) (*GoogleImagesResponse, error) {
 	var s = new(GoogleImagesResponse)
+	var f interface{}
+	err2 := json.Unmarshal(body, &f)
+	if err2 != nil {
+		fmt.Println("whoops:", err2)
+	}
+  fmt.Println(f)
 	err := json.Unmarshal(body, &s)
 	if err != nil {
 		fmt.Println("whoops1:", err)
