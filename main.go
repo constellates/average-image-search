@@ -42,18 +42,11 @@ type GoogleImagesResponse struct {
 	Items []Item `json:"items"`
 }
 
-
 func getImages(body []byte) (*GoogleImagesResponse, error) {
 	var s = new(GoogleImagesResponse)
-	var f interface{}
-	err2 := json.Unmarshal(body, &f)
-	if err2 != nil {
-		fmt.Println("whoops:", err2)
-	}
-  fmt.Println(f)
 	err := json.Unmarshal(body, &s)
 	if err != nil {
-		fmt.Println("whoops1:", err)
+		fmt.Println("whoops:", err)
 	}
 	return s, err
 }
@@ -70,14 +63,14 @@ func downloadFile(term string, uri string) {
 		// create empty file
 		out, err := os.Create("temp/" + term + "/" + fileName)
 		if err != nil {
-			fmt.Println("whoops2:", err)
+			fmt.Println("whoops:", err)
 		}
 		defer out.Close()
 
 		// get file
 		resp, err := http.Get(uri)
 		if err != nil {
-			fmt.Println("whoops3:", err)
+			fmt.Println("whoops:", err)
 		}
 		defer resp.Body.Close()
 
@@ -85,7 +78,7 @@ func downloadFile(term string, uri string) {
 		n, err := io.Copy(out, resp.Body)
 		fmt.Println(n)
 		if err != nil {
-			fmt.Println("whoops4:", err)
+			fmt.Println("whoops:", err)
 		}
 
 		// resize image
@@ -113,7 +106,6 @@ func requestImages(term string, count int) []string {
 
 		// unmarshall json
 		s, err := getImages([]byte(body))
-		fmt.Println(s)
 
 		var items = s.Items
 		for _, item := range items {
