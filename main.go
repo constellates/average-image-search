@@ -126,17 +126,23 @@ func main() {
 	var input []string = append(os.Args[:0], os.Args[1:]...)
 	var term = strings.Join(input, " ")
 
+	if term == "trending" {
+		fmt.Println("get trending")
+		term = getTrend()
+	}
+
 	// make temp dir for term
 	os.MkdirAll("temp/"+term, 0777)
 
 	// make google images request
-	images := requestImages(term, 5)
+	images := requestImages(term, 30)
 
 	// download images
 	for _, url := range images {
 		downloadFile(term, url)
 	}
 
+	// average images to 800px square
 	size := image.Point{800, 800}
 	execute("temp/"+term, "output.jpg", size)
 

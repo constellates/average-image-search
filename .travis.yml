@@ -2,7 +2,7 @@ language: go
 go:
 - 1.5.1
 script:
-- go run *.go cat face
+- go run *.go trending
 env:
   global:
   - SearchEngineId=016877701993014231384:q__vcz9b7r0
