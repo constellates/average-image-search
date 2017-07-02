@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"time"
 	"io"
 	"io/ioutil"
 	"log"
@@ -124,11 +125,12 @@ func main() {
 
 	// get input term
 	var input []string = append(os.Args[:0], os.Args[1:]...)
+	var dateString string = time.Now().Format("20060102")
 	var term = strings.Join(input, " ")
 
 	if term == "trending" {
 		fmt.Println("get trending")
-		term = getTrend()
+		term = getTrend(dateString)
 	}
 
 	// make temp dir for term
@@ -144,7 +146,8 @@ func main() {
 
 	// average images to 800px square
 	size := image.Point{800, 800}
-	execute("temp/"+term, "output.jpg", size)
+	var outputName = dateString + "_" + strings.Replace(term, " ", "-", -1) + ".jpg"
+	execute("temp/"+term, outputName, size)
 
 	// remove source data
 	os.Remove("temp/" + term)

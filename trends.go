@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"net/http"
 	"net/url"
 	"io/ioutil"
@@ -29,11 +28,11 @@ type TrendResponse struct {
 	LastPage          bool     `json:"lastPage"`
 }
 
-func getTrend() (string) {
-  fmt.Println("The Current date is ", time.Now().Format("2006-01-02"))
-	
+func getTrend(dateString string) (string) {
+  fmt.Println("Getting trend for date ", dateString)
+
 	// curl --data "ajax=1&pn=p1&htd=20170630&htv=l" https://trends.google.com/trends/hottrends/hotItems
-	resp, err := http.PostForm("https://trends.google.com/trends/hottrends/hotItems", url.Values{"ajax": {"1"}, "pn": {"p1"}, "htd": {time.Now().Format("20060102")}, "htv": {"l"}})
+	resp, err := http.PostForm("https://trends.google.com/trends/hottrends/hotItems", url.Values{"ajax": {"1"}, "pn": {"p1"}, "htd": {dateString}, "htv": {"l"}})
 	if err != nil {
 		panic(err.Error())
 	}
