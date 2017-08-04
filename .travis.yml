@@ -9,9 +9,11 @@ script:
 - mv ./*.jpg dot-com/content/assets/average_image
 - ls dot-com/content/assets/average_image/
 - cd dot-com
+- git config --global user.name "zack"
+- git config --global user.email "mail@constellates.com"
 - git add content/assets/average_image/
 - git commit -m "auto-image"
-- git push
+- git push https://$GITHUB_TOKEN@github.com/constellates/dot-com.git master
 env:
   global:
   - SearchEngineId=016877701993014231384:q__vcz9b7r0
