@@ -4,9 +4,9 @@ go:
 script:
 - go run *.go trending
 - ls
-- git
 - git clone https://github.com/constellates/dot-com.git
 - ls
+- mv ./*.jpg dot-com/content/assets/average_image
 - ls dot-com/content/assets/average_image/
 env:
   global:
