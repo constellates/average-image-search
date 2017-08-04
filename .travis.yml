@@ -9,7 +9,7 @@ script:
 - mv ./*.jpg dot-com/content/assets/average_image
 - ls dot-com/content/assets/average_image/
 - cd dot-com
-- git add content/assets/average_images/
+- git add content/assets/average_image/
 - git commit -m "auto-image"
 - git push
 env:
