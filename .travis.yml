@@ -3,14 +3,11 @@ go:
 - 1.5.1
 script:
 - go run *.go trending
-- ls
 - git clone https://github.com/constellates/dot-com.git
-- ls
 - GENERATED_IMAGE=$(ls | grep \.jpg$)
 - mv ./*.jpg dot-com/content/assets/average_image
-- ls dot-com/content/assets/average_image/
-- echo "![altText](/assets/average_image/$GENERATED_IMAGE)" >> dot-com/content/posts/average-image.md
-- cd dot-com
+# - echo "![altText](/assets/average_image/$GENERATED_IMAGE)" >> dot-com/content/posts/average-image.md
+- sed -i "7i ![altText](/assets/average_image/$GENERATED_IMAGE)" dot-com/content/posts/average-image.md
 - git config --global user.name "zack"
 - git config --global user.email "mail@constellates.com"
 - git add content/
