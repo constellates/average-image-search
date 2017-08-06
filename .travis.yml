@@ -2,11 +2,25 @@ language: go
 go:
 - 1.5.1
 script:
+# generate image
 - go run *.go trending
+# get generated image
+- IMAGE=$(ls | grep \.jpg$)
+
+# derive image title
+- TITLE=${IMAGE/.jpg} # remove extension
+- TITLE=${TITLE/_/ }  # remove date term separator
+- TITLE=${TITLE/-/ }  # remove term space separator
+- TITLE=${TITLE:0:4}-${TITLE:4:2}-${TITLE:6:2}${TITLE:8} # format date
+
+# move image to blog repo
 - git clone https://github.com/constellates/dot-com.git
-- GENERATED_IMAGE=$(ls | grep \.jpg$)
 - mv ./*.jpg dot-com/content/assets/average_image
-- sed -i "7i ![altText](/assets/average_image/$GENERATED_IMAGE)\n" dot-com/content/posts/average-image.md
+
+# write image markup
+- sed -i "7i ![altText](/assets/average_image/$IMAGE)\n$TITLE\n" dot-com/content/posts/average-image.md
+
+# commit & push
 - cd dot-com/
 - git config --global user.name "zack"
 - git config --global user.email "mail@constellates.com"
