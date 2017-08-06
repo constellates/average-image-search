@@ -6,12 +6,14 @@ script:
 - ls
 - git clone https://github.com/constellates/dot-com.git
 - ls
+- GENERATED_IMAGE=$(ls | grep \.jpg$)
 - mv ./*.jpg dot-com/content/assets/average_image
 - ls dot-com/content/assets/average_image/
+- echo "![altText](/assets/average_image/$GENERATED_IMAGE)" >> content/posts/average-image.md
 - cd dot-com
 - git config --global user.name "zack"
 - git config --global user.email "mail@constellates.com"
-- git add content/assets/average_image/
+- git add content/
 - git commit -m "auto-image"
 - git push https://$GITHUB_TOKEN@github.com/constellates/dot-com.git master
 env:
