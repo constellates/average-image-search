@@ -18,7 +18,7 @@ script:
 - mv ./*.jpg dot-com/content/assets/average_image
 
 # write image markup
-- sed -i "7i ![altText](/assets/average_image/$IMAGE)\n$TITLE\n" dot-com/content/posts/average-image.md
+- sed -i "8i ![altText](/assets/average_image/$IMAGE)\n$TITLE\n" dot-com/content/posts/average-image.md
 
 # commit & push
 - cd dot-com/
