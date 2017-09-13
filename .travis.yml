@@ -10,7 +10,7 @@ script:
 # derive image title
 - TITLE=${IMAGE/.jpg} # remove extension
 - TITLE=${TITLE/_/ }  # remove date term separator
-- TITLE=${TITLE/-/ }  # remove term space separator
+- TITLE=${TITLE//-/ }  # remove term space separators
 - TITLE=${TITLE:0:4}-${TITLE:4:2}-${TITLE:6:2}${TITLE:8} # format date
 
 # move image to blog repo
@@ -18,7 +18,7 @@ script:
 - mv ./*.jpg dot-com/content/assets/average_image
 
 # write image markup
-- sed -i "8i ![altText](/assets/average_image/$IMAGE)\n$TITLE\n" dot-com/content/posts/average-image.md
+- sed -i "8i ![](/assets/average_image/$IMAGE)\n$TITLE\n" dot-com/content/posts/average-image.md
 
 # commit & push
 - cd dot-com/
